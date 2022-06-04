@@ -10,7 +10,7 @@
 # LAST EDITED:      06/04/2022
 ###
 
-FROM alpine:3.16
+FROM docker.io/library/alpine:3.16
 
 COPY build/compilations /bin/compilations
 
