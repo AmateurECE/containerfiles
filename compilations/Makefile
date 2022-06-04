@@ -35,7 +35,7 @@ build/compilations: compilations-$(VERSION).lock
 	echo compilations-$(VERSION) >> $@
 	echo $(VERSION).tar.gz >> $@
 
-container: .containerignore
+container: .containerignore build/compilations
 	buildah bud -t $(IMAGE_NAME) --layers
 
 clean:
