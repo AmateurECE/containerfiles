@@ -43,5 +43,6 @@ clean:
 	rm -f $(VERSION).tar.gz
 	rm -f compilations-$(VERSION).lock
 	rm -rf build
+	rm -f .containerignore
 
 ###############################################################################
