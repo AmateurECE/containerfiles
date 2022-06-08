@@ -7,7 +7,7 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    06/06/2022
+# LAST EDITED:	    06/08/2022
 ###
 
 B:=$(shell pwd)/build
@@ -15,9 +15,9 @@ $(shell mkdir -p $(B))
 
 VERSION=63ecc17a1dc8a130d802d270d73fc0fd5a129558
 TARGET=x86_64-unknown-linux-musl
-BUILD_COMMAND=cd compilations && cargo build --target $(TARGET)
+BUILD_RELEASE=cd compilations && cargo build --release --target $(TARGET)
 BIN="compilations-$(VERSION)/compilations/target/$(TARGET)/debug/compilations"
-IMAGE_NAME=docker.io/edtwardy/compilations:latest
+IMAGE_NAME=docker.io/edtwardy/compilations
 GITHUB_URL=https://github.com/AmateurECE/compilations
 
 all: compilations-release
@@ -33,8 +33,11 @@ BUILD_ARTIFACTS += $(B)/compilations-entrypoint.sh
 
 compilations-release: compilations-release.lock
 
+compilations-release.lock: SHELL=/bin/bash
 compilations-release.lock: $(BUILD_ARTIFACTS)
-	buildah bud -t $(IMAGE_NAME) --layers
+	VERSION=$(VERSION); buildah bud --layers \
+		-t "$(IMAGE_NAME):latest" \
+		-t "$(IMAGE_NAME):$${VERSION:0:8}"
 	touch $@
 
 $(B)/Containerfile: Containerfile; cp $< $@
@@ -48,8 +51,9 @@ $(B)/compilations-$(VERSION).lock: $(B)/$(VERSION).tar.gz
 	touch $@
 
 $(B)/compilations: $(B)/compilations-$(VERSION).lock
-	cd $(B)/compilations-$(VERSION) && $(BUILD_COMMAND)
+	cd $(B)/compilations-$(VERSION) && $(BUILD_RELEASE)
 	cp $(B)/$(BIN) $@
+	strip $@
 
 $(B)/.containerignore: Makefile
 	: # We want to ignore the source artifacts
