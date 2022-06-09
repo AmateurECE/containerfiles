@@ -7,12 +7,12 @@
 #
 # CREATED:          06/03/2022
 #
-# LAST EDITED:      06/04/2022
+# LAST EDITED:      06/08/2022
 ###
 
 FROM docker.io/library/alpine:3.16
 
-COPY build/compilations /bin/compilations
+COPY $COMPILATIONS_FILENAME /bin/compilations
 
 ENV SECRET_FILE="/data/secret_file.yaml"
 ENV CONF_FILE="/data/conf_file.yaml"
