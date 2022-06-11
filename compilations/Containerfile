@@ -12,10 +12,6 @@
 
 FROM docker.io/library/alpine:3.16
 
-# Copy binary
-ARG COMPILATIONS_FILENAME=./compilations-release
-COPY $COMPILATIONS_FILENAME /bin/compilations
-
 # Setup standard configuration
 COPY configuration.yaml /usr/share/compilations/configuration.yaml
 
@@ -25,6 +21,10 @@ ENV CONF_FILE="/usr/share/compilations/configuration.yaml"
 
 COPY compilations-entrypoint.sh /bin/entrypoint
 ENTRYPOINT ["/bin/entrypoint"]
+
+# Copy binary
+ARG COMPILATIONS_FILENAME=./compilations-release
+COPY $COMPILATIONS_FILENAME /bin/compilations
 
 ###############################################################################
 

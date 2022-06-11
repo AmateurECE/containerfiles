@@ -89,7 +89,6 @@ $(B)/compilations-debug.lock: SHELL=/bin/bash
 $(B)/compilations-debug.lock: $(DEBUG_ARTIFACTS)
 	VERSION=$$($(GET_VERSION_COMMAND)); cd $(B) && buildah bud --layers \
 		--build-arg COMPILATIONS_FILENAME=./compilations-debug \
-		--build-arg FRONTEND_ARTIFACTS=./dist-debug \
 		-t "$(IMAGE_NAME):latest" \
 		-t "$(IMAGE_NAME):$${VERSION:0:8}"
 	: # Copy this image to root storage (/var/lib/containers):
