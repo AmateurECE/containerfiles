@@ -1,0 +1,36 @@
+###############################################################################
+# NAME:             Containerfile
+#
+# AUTHOR:           Ethan D. Twardy <ethan.twardy@gmail.com>
+#
+# DESCRIPTION:      Containerfile for the project.
+#
+# CREATED:          06/12/2022
+#
+# LAST EDITED:      06/12/2022
+###
+
+FROM docker.io/library/alpine:3.16
+
+ARG UID=1000
+ARG GID=1000
+ARG USER=libreidp
+RUN adduser -Du ${UID} ${USER}
+
+# The entrypoint script (and default configuration) generates the configuration
+# file at startup time based on the value of certain environment variables.
+ARG DEFAULT_CONFIGURATION_FILE=/home/${USER}/configuration.yaml
+ENV DEFAULT_CONFIGURATION_FILE=${DEFAULT_CONFIGURATION_FILE}
+ENV CONFIGURATION_FILE=${DEFAULT_CONFIGURATION_FILE}
+ENV HTTP_PORT=3000
+ENV START_TLS_ENABLED=true
+
+COPY ./libreidp-entrypoint.sh /bin/libreidp-entrypoint
+ENTRYPOINT ["/bin/libreidp-entrypoint"]
+
+ARG LIBREIDP_FILENAME=./libreidp-release
+COPY $LIBREIDP_FILENAME /bin/libreidp
+
+USER ${user}
+
+###############################################################################
