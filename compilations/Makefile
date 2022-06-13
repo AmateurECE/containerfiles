@@ -7,7 +7,7 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    06/11/2022
+# LAST EDITED:	    06/13/2022
 ###
 
 B:=$(shell pwd)/build
@@ -80,7 +80,9 @@ DEBUG_ARTIFACTS += $(B)/compilations-debug
 
 # Defines the following:
 # 1. GET_VERSION_COMMAND: A command that returns a version string
-# 2. A rule to build $(B)/compilations-debug
+# 2. SOURCE_DIR: Path to the top of the Git repository
+# 3. BUILD_DIR: Path to the compilations build directory in the compilations
+#    component
 sinclude debug.mk
 
 compilations-debug: $(B)/compilations-debug.lock
@@ -94,5 +96,17 @@ $(B)/compilations-debug.lock: $(DEBUG_ARTIFACTS)
 	: # Copy this image to root storage (/var/lib/containers):
 	: # podman save <image_name> | sudo podman load
 	touch $@
+
+$(B)/compilations-debug: force
+	rm -f $(SOURCE_DIR)/compilations/$(BUILD_DIR)/deps/compilations-*
+	rm -f $(SOURCE_DIR)/compilations/$(BUILD_DIR)/compilations
+	rm -rf $(SOURCE_DIR)/compilations/$(BUILD_DIR)/incremental
+	cd $(SOURCE_DIR)/frontend \
+		&& trunk build --public-url "/compilations/app/"
+	cd $(SOURCE_DIR)/compilations \
+		&& cargo build --target $(TARGET)
+	cp $(SOURCE_DIR)/$(BIN) $@
+
+force:
 
 ###############################################################################
