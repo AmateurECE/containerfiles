@@ -7,7 +7,7 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    06/13/2022
+# LAST EDITED:	    06/16/2022
 ###
 
 B:=$(shell pwd)/build
@@ -60,7 +60,7 @@ $(B)/compilations-$(VERSION).lock: $(B)/$(VERSION).tar.gz
 
 $(B)/compilations-release: $(B)/compilations-$(VERSION).lock
 	cd $(B)/compilations-$(VERSION)/frontend \
-		&& trunk build --release --public-url "/compilations/app/"
+		&& trunk build --release
 	cd $(B)/compilations-$(VERSION)/compilations \
 		&& cargo build --release --target $(TARGET)
 	cp $(B)/compilations-$(VERSION)/$(BIN) $@
@@ -102,7 +102,7 @@ $(B)/compilations-debug: force
 	rm -f $(SOURCE_DIR)/compilations/$(BUILD_DIR)/compilations
 	rm -rf $(SOURCE_DIR)/compilations/$(BUILD_DIR)/incremental
 	cd $(SOURCE_DIR)/frontend \
-		&& trunk build --public-url "/compilations/app/"
+		&& trunk build
 	cd $(SOURCE_DIR)/compilations \
 		&& cargo build --target $(TARGET)
 	cp $(SOURCE_DIR)/$(BIN) $@
