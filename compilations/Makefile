@@ -7,15 +7,15 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    06/16/2022
+# LAST EDITED:	    06/21/2022
 ###
 
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
-VERSION=63ecc17a1dc8a130d802d270d73fc0fd5a129558
+VERSION=f1f9ba17199c27b4a03c296412da8de70cc3d249
 TARGET=x86_64-unknown-linux-musl
-BIN="compilations/target/$(TARGET)/debug/compilations"
+BUILD_DIR="compilations/target/$(TARGET)"
 IMAGE_NAME=docker.io/edtwardy/compilations
 GITHUB_URL=https://github.com/AmateurECE/compilations
 
@@ -45,8 +45,8 @@ compilations-release: $(B)/compilations-release.lock
 
 $(B)/compilations-release.lock: SHELL=/bin/bash
 $(B)/compilations-release.lock: $(RELEASE_ARTIFACTS)
-	VERSION=$(VERSION); buildah bud --layers \
-		--build-arg COMPILATIONS_FILENAME=./compilations-release \
+	VERSION=$(VERSION); cd $(B) && buildah bud --layers \
+		--build-arg COMPILATIONS_PATH=./compilations-release \
 		-t "$(IMAGE_NAME):latest" \
 		-t "$(IMAGE_NAME):$${VERSION:0:8}"
 	touch $@
@@ -59,11 +59,13 @@ $(B)/compilations-$(VERSION).lock: $(B)/$(VERSION).tar.gz
 	touch $@
 
 $(B)/compilations-release: $(B)/compilations-$(VERSION).lock
+	: # This step requires password input.
+	cd $(B)/compilations-$(VERSION) && ./secure.sh decrypt
 	cd $(B)/compilations-$(VERSION)/frontend \
 		&& trunk build --release
 	cd $(B)/compilations-$(VERSION)/compilations \
 		&& cargo build --release --target $(TARGET)
-	cp $(B)/compilations-$(VERSION)/$(BIN) $@
+	cp $(B)/compilations-$(VERSION)/$(BUILD_DIR)/release/compilations $@
 	strip $@
 
 $(B)/.containerignore: Makefile
@@ -78,34 +80,31 @@ $(B)/.containerignore: Makefile
 DEBUG_ARTIFACTS := $(BUILD_ARTIFACTS)
 DEBUG_ARTIFACTS += $(B)/compilations-debug
 
-# Defines the following:
-# 1. GET_VERSION_COMMAND: A command that returns a version string
-# 2. SOURCE_DIR: Path to the top of the Git repository
-# 3. BUILD_DIR: Path to the compilations build directory in the compilations
-#    component
+# Defines SOURCE_DIR: Path to the top of the Git repository
 sinclude debug.mk
 
 compilations-debug: $(B)/compilations-debug.lock
 
 $(B)/compilations-debug.lock: SHELL=/bin/bash
 $(B)/compilations-debug.lock: $(DEBUG_ARTIFACTS)
-	VERSION=$$($(GET_VERSION_COMMAND)); cd $(B) && buildah bud --layers \
-		--build-arg COMPILATIONS_FILENAME=./compilations-debug \
-		-t "$(IMAGE_NAME):latest" \
-		-t "$(IMAGE_NAME):$${VERSION:0:8}"
+	VERSION=$$(cd $(SOURCE_DIR) && git rev-parse HEAD); \
+		cd $(B) && buildah bud --layers \
+			--build-arg COMPILATIONS_PATH=./compilations-debug \
+			-t "$(IMAGE_NAME):latest" \
+			-t "$(IMAGE_NAME):$${VERSION:0:8}"
 	: # Copy this image to root storage (/var/lib/containers):
 	: # podman save <image_name> | sudo podman load
 	touch $@
 
 $(B)/compilations-debug: force
-	rm -f $(SOURCE_DIR)/compilations/$(BUILD_DIR)/deps/compilations-*
-	rm -f $(SOURCE_DIR)/compilations/$(BUILD_DIR)/compilations
-	rm -rf $(SOURCE_DIR)/compilations/$(BUILD_DIR)/incremental
+	rm -f $(SOURCE_DIR)/$(BUILD_DIR)/debug/deps/compilations-*
+	rm -f $(SOURCE_DIR)/$(BUILD_DIR)/debug/compilations
+	rm -rf $(SOURCE_DIR)/$(BUILD_DIR)/debug/incremental
 	cd $(SOURCE_DIR)/frontend \
 		&& trunk build
 	cd $(SOURCE_DIR)/compilations \
 		&& cargo build --target $(TARGET)
-	cp $(SOURCE_DIR)/$(BIN) $@
+	cp $(SOURCE_DIR)/$(BUILD_DIR)/debug/compilations $@
 
 force:
 

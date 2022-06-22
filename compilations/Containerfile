@@ -7,7 +7,7 @@
 #
 # CREATED:          06/03/2022
 #
-# LAST EDITED:      06/11/2022
+# LAST EDITED:      06/21/2022
 ###
 
 FROM docker.io/library/alpine:3.16
@@ -23,8 +23,8 @@ COPY compilations-entrypoint.sh /bin/entrypoint
 ENTRYPOINT ["/bin/entrypoint"]
 
 # Copy binary
-ARG COMPILATIONS_FILENAME=./compilations-release
-COPY $COMPILATIONS_FILENAME /bin/compilations
+ARG COMPILATIONS_PATH=./compilations-release
+COPY $COMPILATIONS_PATH /bin/compilations
 
 ###############################################################################
 
