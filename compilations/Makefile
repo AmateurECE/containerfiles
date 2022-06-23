@@ -7,13 +7,14 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    06/21/2022
+# LAST EDITED:	    06/22/2022
 ###
 
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
-VERSION=f1f9ba17199c27b4a03c296412da8de70cc3d249
+VERSION=1.0.0
+V=v
 TARGET=x86_64-unknown-linux-musl
 BUILD_DIR="compilations/target/$(TARGET)"
 IMAGE_NAME=docker.io/edtwardy/compilations
@@ -51,10 +52,10 @@ $(B)/compilations-release.lock: $(RELEASE_ARTIFACTS)
 		-t "$(IMAGE_NAME):$${VERSION:0:8}"
 	touch $@
 
-$(B)/$(VERSION).tar.gz:
-	cd $(B) && curl -L -O "$(GITHUB_URL)/archive/$(VERSION).tar.gz"
+$(B)/$(V)$(VERSION).tar.gz:
+	cd $(B) && curl -L -O "$(GITHUB_URL)/archive/$(V)$(VERSION).tar.gz"
 
-$(B)/compilations-$(VERSION).lock: $(B)/$(VERSION).tar.gz
+$(B)/compilations-$(VERSION).lock: $(B)/$(V)$(VERSION).tar.gz
 	cd $(B) && tar xzvf $<
 	touch $@
 
@@ -71,7 +72,7 @@ $(B)/compilations-release: $(B)/compilations-$(VERSION).lock
 $(B)/.containerignore: Makefile
 	: # We want to ignore the source artifacts
 	echo compilations-$(VERSION) >> $@
-	echo $(VERSION).tar.gz >> $@
+	echo $(V)$(VERSION).tar.gz >> $@
 
 ###############################################################################
 # Debug Build
