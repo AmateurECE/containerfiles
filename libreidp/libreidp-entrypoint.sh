@@ -8,7 +8,7 @@
 #
 # CREATED:          06/12/2022
 #
-# LAST EDITED:      06/12/2022
+# LAST EDITED:      06/25/2022
 ###
 
 # Generate the configuration file (used by default, unless the file path is
@@ -16,7 +16,7 @@
 cat - >$DEFAULT_CONFIGURATION_FILE <<EOF
 ldap:
   uri: $LDAP_URI
-  start_tls_enabled: $START_TLS_ENABLED
+  base: $LDAP_SEARCH_BASE
 http:
   address: "0.0.0.0:$HTTP_PORT"
 EOF

@@ -7,7 +7,7 @@
 #
 # CREATED:          06/12/2022
 #
-# LAST EDITED:      06/12/2022
+# LAST EDITED:      06/25/2022
 ###
 
 FROM docker.io/library/alpine:3.16
@@ -23,13 +23,12 @@ ARG DEFAULT_CONFIGURATION_FILE=/home/${USER}/configuration.yaml
 ENV DEFAULT_CONFIGURATION_FILE=${DEFAULT_CONFIGURATION_FILE}
 ENV CONFIGURATION_FILE=${DEFAULT_CONFIGURATION_FILE}
 ENV HTTP_PORT=3000
-ENV START_TLS_ENABLED=true
 
 COPY ./libreidp-entrypoint.sh /bin/libreidp-entrypoint
 ENTRYPOINT ["/bin/libreidp-entrypoint"]
 
-ARG LIBREIDP_FILENAME=./libreidp-release
-COPY $LIBREIDP_FILENAME /bin/libreidp
+ARG LIBREIDP_PATH=./libreidp-release
+COPY $LIBREIDP_PATH /bin/libreidp
 
 USER ${user}
 
