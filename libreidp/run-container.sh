@@ -19,7 +19,7 @@ fi
 export DOCKER_HOST=unix:///var/run/podman/podman.sock
 CONTAINER_NAME=edtwardy-webservices_libreidp_1
 
-(podman ps | grep $CONTAINER_NAME) && docker-compose down
-docker-compose up -d
+((podman ps | grep $CONTAINER_NAME) && docker-compose restart) \
+    || docker-compose up -d
 
 ###############################################################################
