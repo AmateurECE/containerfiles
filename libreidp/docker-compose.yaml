@@ -1,0 +1,18 @@
+version: '2.4'
+services:
+  libreidp:
+    image: 'docker.io/edtwardy/libreidp:latest'
+    container_name: edtwardy-webservices_libreidp_1
+    environment:
+      - LDAP_URI='ldap://edtwardy-webservices_openldap_1'
+      - LDAP_SEARCH_BASE='ou=people,dc=edtwardy,dc=hopto,dc=org'
+      - TZ=America/Chicago
+
+  redis:
+    image: 'docker.io/library/redis:7.0-alpine'
+    container_name: edtwardy-webservices_redis_1
+
+networks:
+  default:
+    external:
+      name: edtwardy-webservices_front_net
