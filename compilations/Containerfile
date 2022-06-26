@@ -7,10 +7,13 @@
 #
 # CREATED:          06/03/2022
 #
-# LAST EDITED:      06/21/2022
+# LAST EDITED:      06/26/2022
 ###
 
 FROM docker.io/library/alpine:3.16
+
+ENV TZ=Europe/London
+RUN apk add --no-cache tzdata
 
 # Setup standard configuration
 COPY configuration.yaml /usr/share/compilations/configuration.yaml
@@ -27,4 +30,3 @@ ARG COMPILATIONS_PATH=./compilations-release
 COPY $COMPILATIONS_PATH /bin/compilations
 
 ###############################################################################
-

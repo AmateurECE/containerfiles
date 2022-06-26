@@ -8,7 +8,7 @@
 #
 # CREATED:          06/13/2022
 #
-# LAST EDITED:      06/13/2022
+# LAST EDITED:      06/26/2022
 ###
 
 if [ "0" != $(id -u) ]; then
@@ -25,6 +25,7 @@ CONTAINER_NAME=edtwardy-webservices_compilations_1
 podman run -d --rm --name $CONTAINER_NAME \
      --network edtwardy-webservices_front_net \
      -v compilations-secret:/data:ro \
+     -e TZ=America/Chicago \
      docker.io/edtwardy/compilations:latest
 
 # Need to restart Nginx
