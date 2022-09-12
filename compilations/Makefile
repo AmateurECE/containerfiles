@@ -7,13 +7,13 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    08/13/2022
+# LAST EDITED:	    09/12/2022
 ###
 
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
-VERSION=1.1.0
+VERSION=1.1.1
 V=v
 TARGET=x86_64-unknown-linux-musl
 BUILD_DIR="compilations/target/$(TARGET)"
