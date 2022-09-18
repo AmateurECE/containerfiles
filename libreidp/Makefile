@@ -7,7 +7,7 @@
 #
 # CREATED:	    06/12/2022
 #
-# LAST EDITED:	    06/25/2022
+# LAST EDITED:	    09/18/2022
 ###
 
 B:=$(shell pwd)/build
@@ -21,6 +21,9 @@ IMAGE_NAME=docker.io/edtwardy/libreidp
 GITHUB_URL=https://github.com/AmateurECE/libreidp
 
 all: libreidp-release
+
+clean:
+	rm -rf $(B)
 
 ###############################################################################
 # Common

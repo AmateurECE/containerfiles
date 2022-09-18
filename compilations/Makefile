@@ -7,7 +7,7 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    09/12/2022
+# LAST EDITED:	    09/18/2022
 ###
 
 B:=$(shell pwd)/build
@@ -21,6 +21,9 @@ IMAGE_NAME=docker.io/edtwardy/compilations
 GITHUB_URL=https://github.com/AmateurECE/compilations
 
 all: compilations-release
+
+clean:
+	rm -rf $(B)
 
 ###############################################################################
 # Common

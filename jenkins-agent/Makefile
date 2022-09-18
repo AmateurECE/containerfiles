@@ -7,7 +7,7 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    08/14/2022
+# LAST EDITED:	    09/18/2022
 ###
 
 B:=$(shell pwd)/build
@@ -17,6 +17,9 @@ IMAGE_NAME=docker.io/edtwardy/jenkins-agent
 VERSION=1.0.0
 
 all: jenkins-agent-release
+
+clean:
+	rm -rf $(B)
 
 ###############################################################################
 # jenkins-agent-release
