@@ -1,0 +1,37 @@
+###############################################################################
+# NAME:             Containerfile
+#
+# AUTHOR:           Ethan D. Twardy <ethan.twardy@gmail.com>
+#
+# DESCRIPTION:      For building the budget-tool image.
+#
+# CREATED:          09/18/2022
+#
+# LAST EDITED:      09/18/2022
+###
+
+FROM docker.io/library/alpine:3.16
+
+ENV TZ=Europe/London
+RUN apk add --no-cache tzdata
+
+ARG UID=1000
+ARG USER=budget-tool
+RUN adduser -Du ${UID} ${USER}
+
+# The budget-tool application requires a secret file and a database url
+ENV SECRET_FILE="/data/secret.json"
+
+COPY budget-tool-entrypoint.sh /bin/entrypoint
+ENTRYPOINT ["/bin/entrypoint"]
+
+# Copy binaries
+ARG SERVICE=./budget-service-release
+COPY $SERVICE /bin/budget-service
+
+ARG MIGRATIONS=./budget-migrations-release
+COPY $MIGRATIONS /bin/budget-migrations
+
+USER ${USER}
+
+###############################################################################
