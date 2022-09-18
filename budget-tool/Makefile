@@ -13,7 +13,7 @@
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
-VERSION=b521681de37c7f7f32f50dad4ba9209e83672296
+VERSION=6b43f743aebc71fdf35133c348e1369d75e91b16
 V=
 TARGET=x86_64-unknown-linux-musl
 BUILD_DIR="target/$(TARGET)"

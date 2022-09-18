@@ -1,3 +1,4 @@
+#!/bin/sh
 ###############################################################################
 # NAME:             budget-tool-entrypoint.sh
 #
@@ -11,11 +12,12 @@
 ###
 
 export DATABASE_URL
+set -e
 
-# Run the migrations first
+printf '%s\n' "Running migrations"
 /bin/budget-migrations -s $SECRET_FILE
 
-# Start the service
+printf '%s\n' "Starting budget-service"
 /bin/budget-service -s $SECRET_FILE
 
 ###############################################################################
