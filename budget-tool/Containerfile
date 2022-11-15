@@ -7,7 +7,7 @@
 #
 # CREATED:          09/18/2022
 #
-# LAST EDITED:      09/18/2022
+# LAST EDITED:      11/14/2022
 ###
 
 FROM docker.io/library/alpine:3.16
@@ -27,7 +27,8 @@ ENTRYPOINT ["/bin/entrypoint"]
 
 # Copy binaries
 ARG SERVICE=./budget-service-release
-COPY $SERVICE /bin/budget-service
+# TODO: Install budget-service
+# COPY $SERVICE /bin/budget-service
 
 ARG MIGRATIONS=./budget-migrations-release
 COPY $MIGRATIONS /bin/budget-migrations
