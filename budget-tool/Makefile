@@ -7,13 +7,13 @@
 #
 # CREATED:	    09/18/2022
 #
-# LAST EDITED:	    11/14/2022
+# LAST EDITED:	    11/15/2022
 ###
 
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
-VERSION=0.1.0
+VERSION=0.1.1
 V=v
 TARGET=x86_64-unknown-linux-musl
 BUILD_DIR="target/$(TARGET)"
@@ -41,8 +41,7 @@ $(B)/budget-tool-entrypoint.sh: budget-tool-entrypoint.sh; cp $< $@
 
 RELEASE_ARTIFACTS := $(BUILD_ARTIFACTS)
 RELEASE_ARTIFACTS += $(B)/.containerignore
-# TODO: Build and install budget-service
-# RELEASE_ARTIFACTS += $(B)/budget-service-release
+RELEASE_ARTIFACTS += $(B)/budget-service-release
 RELEASE_ARTIFACTS += $(B)/budget-migrations-release
 
 budget-tool-release: SOURCE_DIR=$(B)/budget-tool-$(VERSION)
@@ -70,11 +69,10 @@ $(B)/budget-service-release: $(B)/budget-tool-$(VERSION).lock
 	cp $(SOURCE_DIR)/budget-service/$(BUILD_DIR)/release/budget-service $@
 	strip $@
 
-$(B)/budget-migrations-release: TOOLS=$(SOURCE_DIR)/tools
+$(B)/budget-migrations-release: MIGRATIONS=$(SOURCE_DIR)/budget-migrations
 $(B)/budget-migrations-release: $(B)/budget-tool-$(VERSION).lock
-	cd $(TOOLS)/budget-migrations \
-		&& cargo build --release --target $(TARGET)
-	cp $(TOOLS)/budget-migrations/$(BUILD_DIR)/release/budget-migrations $@
+	cd $(MIGRATIONS) && cargo build --release --target $(TARGET)
+	cp $(MIGRATIONS)/$(BUILD_DIR)/release/budget-migrations $@
 	strip $@
 
 $(B)/.containerignore: Makefile
