@@ -7,13 +7,13 @@
 #
 # CREATED:	    09/18/2022
 #
-# LAST EDITED:	    11/15/2022
+# LAST EDITED:	    11/20/2022
 ###
 
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
-VERSION=0.1.1
+VERSION=0.2.0
 V=v
 TARGET=x86_64-unknown-linux-musl
 BUILD_DIR="target/$(TARGET)"
