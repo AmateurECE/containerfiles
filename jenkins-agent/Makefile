@@ -7,14 +7,14 @@
 #
 # CREATED:	    06/03/2022
 #
-# LAST EDITED:	    09/18/2022
+# LAST EDITED:	    01/15/2023
 ###
 
 B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
 IMAGE_NAME=docker.io/edtwardy/jenkins-agent
-VERSION=1.0.0
+VERSION=1.1.0
 
 all: jenkins-agent-release
 
