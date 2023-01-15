@@ -8,7 +8,7 @@
 #
 # CREATED:          06/13/2022
 #
-# LAST EDITED:      07/27/2022
+# LAST EDITED:      01/11/2023
 ###
 
 if [ "0" != $(id -u) ]; then
@@ -16,7 +16,7 @@ if [ "0" != $(id -u) ]; then
     exit 1
 fi
 
-CONTAINER_NAME=edtwardy-webservices_compilations_1
+CONTAINER_NAME=twardyece_compilations_1
 
 # Bring down the container if it's running
 (podman ps | grep $CONTAINER_NAME) && podman stop $CONTAINER_NAME \
@@ -30,6 +30,6 @@ podman run -d --name $CONTAINER_NAME \
      docker.io/edtwardy/compilations:latest
 
 # Need to restart Nginx
-podman restart edtwardy-webservices_nginx_1
+podman restart twardyece_nginx_1
 
 ###############################################################################
