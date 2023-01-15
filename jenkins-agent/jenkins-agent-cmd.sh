@@ -2,7 +2,11 @@
 
 set -e
 
-CONTROLLER_HOSTNAME=http://twardyece_jenkins-controller_1:8080
+if [[ -z "$CONTROLLER_HOSTNAME" ]]; then
+    >&2 printf '%s\n' "CONTROLLER_HOSTNAME must be set in the environment"
+    exit 1
+fi
+
 JNLP_PATH=jenkins/computer/$AGENT_NAME/jenkins-agent.jnlp
 exec /opt/java/openjdk/bin/java -jar /usr/share/jenkins/agent.jar \
      -jnlpUrl $CONTROLLER_HOSTNAME/$JNLP_PATH \

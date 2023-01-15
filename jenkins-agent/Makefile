@@ -14,7 +14,7 @@ B:=$(shell pwd)/build
 $(shell mkdir -p $(B))
 
 IMAGE_NAME=docker.io/edtwardy/jenkins-agent
-VERSION=1.1.0
+VERSION=1.2.0
 
 all: jenkins-agent-release
 
