@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -z "$CONTROLLER_HOSTNAME" ]]; then
+if [ -z "$CONTROLLER_HOSTNAME" ]; then
     >&2 printf '%s\n' "CONTROLLER_HOSTNAME must be set in the environment"
     exit 1
 fi
