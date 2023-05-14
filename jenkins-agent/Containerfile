@@ -8,7 +8,7 @@ RUN apt-get update \
         gnupg2 \
         curl \
         procps \
-        plantuml \
+        default-jre-headless \
         graphviz \
         && apt-get clean
 
@@ -16,11 +16,22 @@ RUN apt-get update \
 RUN gpg2 --recv-keys \
         409B6B1796C275462A1703113804BB82D39DC0E3 \
         7D2BAF1CF37B13E2069D6956105BD0E739499BDB \
-        && (curl -sSL https://get.rvm.io | bash -s stable --ruby)
+        && (curl -sSL https://get.rvm.io | bash -s stable)
 
 # Ruby/Jekyll setup (for blog)
 RUN usermod -aG rvm jenkins
-RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && gem install bundler"
+RUN /bin/bash -l -c \
+        ". /etc/profile.d/rvm.sh && rvm install ruby-3.0.0 --disable-binary" \
+        && /bin/bash -l -c ". /etc/profile.d/rvm.sh && gem install bundler"
+
+# PlantUML Setup (for blog)
+ARG PLANTUML_VERSION=1.2023.7
+ARG PLANTUML_DOWNLOAD=https://github.com/plantuml/plantuml/releases/download
+RUN curl -L --output /usr/share/java/plantuml-${PLANTUML_VERSION}.jar \
+        ${PLANTUML_DOWNLOAD}/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar \
+        && ln -s /usr/share/java/plantuml-${PLANTUML_VERSION}.jar \
+        /usr/share/java/plantuml.jar
+COPY plantuml.sh /usr/bin/plantuml
 
 USER jenkins
 
