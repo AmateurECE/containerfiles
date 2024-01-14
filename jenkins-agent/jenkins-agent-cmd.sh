@@ -7,7 +7,7 @@ if [ -z "$CONTROLLER_HOSTNAME" ]; then
     exit 1
 fi
 
-JNLP_PATH=jenkins/computer/$AGENT_NAME/jenkins-agent.jnlp
+JNLP_PATH=${JENKINS_PREFIX}computer/$AGENT_NAME/jenkins-agent.jnlp
 exec /opt/java/openjdk/bin/java -jar /usr/share/jenkins/agent.jar \
      -jnlpUrl $CONTROLLER_HOSTNAME/$JNLP_PATH \
      -secret @/secrets/jnlp-secret \
