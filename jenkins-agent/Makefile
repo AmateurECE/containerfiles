@@ -31,9 +31,11 @@ BUILD_ARTIFACTS += $(B)/jenkins-agent-cmd.sh
 jenkins-agent-release: $(B)/jenkins-agent-release.lock
 
 $(B)/jenkins-agent-release.lock: $(BUILD_ARTIFACTS)
-	cd $(B) && buildah bud --layers \
+	cd $(B) && podman build --layers \
 		-t $(IMAGE_NAME):latest \
-		-t $(IMAGE_NAME):$(VERSION)
+		-t $(IMAGE_NAME):$(VERSION) \
+		-f $(B)/Containerfile \
+		.
 	touch $@
 
 $(B)/Containerfile: Containerfile
