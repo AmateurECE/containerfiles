@@ -27,6 +27,7 @@ clean:
 
 BUILD_ARTIFACTS += $(B)/Containerfile
 BUILD_ARTIFACTS += $(B)/jenkins-agent-cmd.sh
+BUILD_ARTIFACTS += $(B)/flake-run.sh
 
 jenkins-agent-release: $(B)/jenkins-agent-release.lock
 
@@ -41,6 +42,8 @@ $(B)/jenkins-agent-release.lock: $(BUILD_ARTIFACTS)
 $(B)/Containerfile: Containerfile
 	mkdir -p $(@D) && cp $< $@
 $(B)/jenkins-agent-cmd.sh: jenkins-agent-cmd.sh
+	mkdir -p $(@D) && cp $< $@
+$(B)/flake-run.sh: flake-run.sh
 	mkdir -p $(@D) && cp $< $@
 
 ###############################################################################

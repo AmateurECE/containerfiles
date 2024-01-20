@@ -5,26 +5,30 @@ RUN apt-get update \
         && apt-get install -y --no-install-recommends \
         python3 \
         python3-pip \
-        curl \
-        procps \
-        default-jre-headless \
-        graphviz \
-        plantuml \
-        ruby-dev \
+	xz-utils \
         && apt-get clean
 
-# blog: PlantUML Setup
-# The version installed by Debian is too old to recognize some of the keywords
-# used in various blogposts.
-ARG PLANTUML_VERSION=1.2023.13
-ARG PLANTUML_DOWNLOAD=https://github.com/plantuml/plantuml/releases/download
-RUN curl -L --output /usr/share/plantuml/plantuml.jar \
-        ${PLANTUML_DOWNLOAD}/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar
-
-# Install bundler
-RUN gem install bundler
+# Create the nix store as writable by user jenkins
+RUN install -d -m755 \
+	-o $(awk -F: '/jenkins/{print $3}' /etc/passwd) \
+	-g $(awk -F: '/jenkins/{print $4}' /etc/passwd) \
+	/nix
 
 USER jenkins
+
+RUN bash -l -c "curl -L https://nixos.org/nix/install | sh"
+
+# Setup for Nix on user jenkins' login shell and experimental features
+RUN printf '%s\n' \
+	'export USER=jenkins' \
+	'source $HOME/.nix-profile/etc/profile.d/nix.sh' \
+	>> $HOME/.bash_aliases \
+	&& mkdir -p $HOME/.config/nix \
+	&& echo 'experimental-features = nix-command flakes' \
+	> $HOME/.config/nix/nix.conf
+
+# Create a named volume for the nix store, for some amount of caching.
+VOLUME /nix
 
 # docs: Python/MkDocs setup
 # TODO: Debian recently switched to enabling the "externally managed
@@ -36,9 +40,6 @@ ENV PATH="/home/jenkins/.local/bin:$PATH"
 RUN python3 -m pip install --break-system-packages setuptools wheel \
         && python3 -m pip install --break-system-packages mkdocs-material
 
-# blog: When running "bundle install", install all gems to a user-owned
-# location
-RUN /bin/bash -l -c "bundle config set --local path $HOME/.gems"
-
 COPY jenkins-agent-cmd.sh /bin/jenkins-agent-cmd
+COPY flake-run.sh /bin/flake-run
 CMD ["/bin/jenkins-agent-cmd"]
